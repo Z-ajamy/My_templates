@@ -1,0 +1,90 @@
+# ==============================================================================
+# RUFF: THE RUST-POWERED LINTER & FORMATTER
+# ==============================================================================
+# WHAT IS RUFF?
+# Ruff is an extremely fast Python linter and code formatter written in Rust.
+# It mathematically replaces multiple legacy tools (Flake8, Black, isort, pyupgrade)
+# into a single unified engine, ensuring strict architectural standards.
+#
+# CLI COMMANDS (EXECUTION LIFECYCLE):
+# 1. `ruff check .`
+#    -> Runs the Linter engine. Scans all files in the current directory (.)
+#       for logical bugs, unused variables, and bad design patterns.
+#
+# 2. `ruff check --fix .`
+#    -> Runs the Linter and safely applies auto-fixes. It will automatically
+#       delete unused imports, modernize syntax, and sort module imports.
+#
+# 3. `ruff format .`
+#    -> Runs the Formatter engine. It builds an AST (Abstract Syntax Tree),
+#       ignores original spacing, and completely rewrites the files to match
+#       the strict line-length and quote styles defined below.
+#
+# 4. `ruff rule <CODE>` (e.g., `ruff rule B008`)
+#    -> A debugging command. Prints the official documentation and reasoning
+#       behind a specific error code.
+# ==============================================================================
+
+[tool.ruff]
+# ------------------------------------------------------------------------------
+# 1. GLOBAL CONFIGURATION
+# When to modify: Only if the entire engineering team agrees on a different
+# line length, or when upgrading the base Python infrastructure (e.g., to 3.13).
+# ------------------------------------------------------------------------------
+
+# Maximum allowed characters per line. 
+# 88 is the strict industry standard inherited from Black.
+line-length = 88
+
+# The minimum supported Python version for the project environment.
+# Ruff uses this to determine which syntax modernizations are safe to apply.
+target-version = "py312"
+
+# Directories strictly excluded from linting and formatting.
+# Modify this if you add auto-generated directories (e.g., "alembic", "migrations").
+exclude = [
+    ".git",
+    "__pycache__",
+    ".venv",
+    "venv",
+]
+
+[tool.ruff.lint]
+# ------------------------------------------------------------------------------
+# 2. LINTER CONFIGURATION
+# When to modify: When enforcing new coding standards, adding new plugins,
+# or when a specific framework requires ignoring a standard Python rule.
+# ------------------------------------------------------------------------------
+
+# Active rule sets (The specific checks Ruff will execute).
+select = [
+    "E",   # pycodestyle Error: Catches invalid syntax and spacing violations.
+    "F",   # Pyflakes: Catches fatal logical bugs and undefined variables.
+    "I",   # isort: Automatically sorts and groups all imports cleanly.
+    "UP",  # pyupgrade: Forces legacy code to use modern Python features.
+    "B",   # flake8-bugbear: Detects common architectural design flaws.
+]
+
+# Rule exemptions (Whitelist).
+# Modify this ONLY if a rule explicitly breaks your framework's expected behavior.
+ignore = [
+    # B008: "Do not perform function calls in argument defaults."
+    # Architectural override: FastAPI strictly requires this for Dependency Injection.
+    # Example: `def get_users(db: Session = Depends(get_db)):`
+    "B008",
+]
+
+[tool.ruff.format]
+# ------------------------------------------------------------------------------
+# 3. FORMATTER CONFIGURATION
+# When to modify: Almost never. These dictate the absolute textual structure.
+# ------------------------------------------------------------------------------
+
+# Force the use of double quotes for all string literals.
+quote-style = "double"
+
+# Force the use of spaces instead of hardware tabs for indentation.
+indent-style = "space"
+
+# Automatically format Python code snippets embedded inside docstrings.
+docstring-code-format = true
