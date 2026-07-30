@@ -1,6 +1,9 @@
 # ==============================================================================
 # RUFF: THE RUST-POWERED LINTER & FORMATTER
 # ==============================================================================
+
+# pip install ruff
+
 # WHAT IS RUFF?
 # Ruff is an extremely fast Python linter and code formatter written in Rust.
 # It mathematically replaces multiple legacy tools (Flake8, Black, isort, pyupgrade)
