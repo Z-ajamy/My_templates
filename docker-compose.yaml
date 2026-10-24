@@ -1,0 +1,66 @@
+version: '3.8'
+
+services:
+  # ==========================================
+  # (Reverse Proxy) - Nginx
+  # ==========================================
+  nginx:
+    image: nginx:alpine
+    ports:
+      - "80:80"
+    volumes:
+      # (ro = read-only)
+      - ./nginx.conf:/etc/nginx/conf.d/default.conf:ro
+    depends_on:
+      - api
+    networks:
+      - frontend_net
+
+  # ==========================================
+  # (Backend) - Flask
+  # ==========================================
+  api:
+    build: .
+    environment:
+      - DB_HOST=db
+      - DB_USER=flask_user
+
+      - DB_PASSWORD=${FLASK_DB_PASSWORD:-SuperSecretPass123}
+      - DB_NAME=flask_db
+    depends_on:
+      - db
+    networks:
+      - frontend_net
+      - backend_net
+
+  # ==========================================
+  # (Database) - MySQL
+  # ==========================================
+  db:
+    image: mysql:8.4
+    environment:
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD:-RootCriticalPass}
+      MYSQL_DATABASE: flask_db
+      MYSQL_USER: flask_user
+      MYSQL_PASSWORD: ${FLASK_DB_PASSWORD:-SuperSecretPass123}
+    volumes:
+      - mysql_data:/var/lib/mysql
+    networks:
+      - backend_net
+
+# ==========================================
+# (Network Topology)
+# ==========================================
+networks:
+  frontend_net:
+    driver: bridge
+  backend_net:
+    driver: bridge
+    # عزل تام: يمنع أي حاوية في هذه الشبكة من الاتصال بالإنترنت
+    internal: true 
+
+# ==========================================
+# (State Persistence)
+# ==========================================
+volumes:
+  mysql_data:
