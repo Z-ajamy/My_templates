@@ -1,0 +1,33 @@
+[tool.pytest.ini_options]
+pythonpath = [
+  "."
+]
+
+[tool.ruff]
+line-length = 88
+target-version = "py312"
+exclude = [
+    ".git",
+    "__pycache__",
+    ".venv",
+    "venv",
+]
+
+[tool.ruff.lint]
+select = [
+    "E",   # pycodestyle Error: Catches invalid syntax and spacing violations.
+    "F",   # Pyflakes: Catches fatal logical bugs and undefined variables.
+    "I",   # isort: Automatically sorts and groups all imports cleanly.
+    "UP",  # pyupgrade: Forces legacy code to use modern Python features.
+    "B",   # flake8-bugbear: Detects common architectural design flaws.
+]
+
+ignore = [
+    "B008",
+]
+
+[tool.ruff.format]
+
+quote-style = "double"
+indent-style = "space"
+docstring-code-format = true
