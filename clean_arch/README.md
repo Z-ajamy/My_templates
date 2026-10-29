@@ -145,7 +145,12 @@ project_root/
 ├── docker-compose.yml                        # Local orchestration (App, PostgreSQL, Redis, Nginx)
 ├── Dockerfile                                # Production container build instructions
 ├── Makefile                                  # Automation shortcuts (test, lint, migrate, run)
-└── pyproject.toml                            # Dependencies, pytest, ruff, and mypy configurations
+├── pyproject.toml                            # Dependencies, pytest, ruff, and mypy configurations
+├── .python-version                            
+├── .venv                            
+├── uv.lock                            
+└── .gitignore                           
+
 
 
 
