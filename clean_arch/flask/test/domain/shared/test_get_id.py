@@ -1,7 +1,7 @@
 from src.domain.shared.id_factory import create_uuid4
 
 
-def test_uuid4_creation():
+def test_uuid4_creation() -> None:
     id = create_uuid4()
     assert isinstance(id, str)
     assert len(id) == 32
