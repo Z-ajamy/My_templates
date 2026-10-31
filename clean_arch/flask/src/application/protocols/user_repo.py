@@ -14,7 +14,10 @@ class UserRepo(Protocol):
 
     # Queries --Does not change the data--
     # Optimistic Locking is defult and Pessimistic Locking is optional
+
+    # with_for_update is leaking from repo layer
     def get_by_id(self, id: str, with_for_update: bool = False) -> User | None: ...
+
     def get_by_email(
         self, email: Email, with_for_update: bool = False
     ) -> User | None: ...

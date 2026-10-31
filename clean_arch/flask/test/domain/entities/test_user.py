@@ -42,7 +42,7 @@ def test_user_change_name_increments_version():
 def test_user_change_email_increments_version():
     email_vo = Email(value="ali@gmail.com")
     user = User(name="Ali", email=email_vo)
-    new_user = user.change_email("ahmed@gmail.com")
+    new_user = user.change_email(Email(value="ahmed@gmail.com"))
 
     assert isinstance(new_user.email, Email)
     assert new_user.email.value == "ahmed@gmail.com"
