@@ -13,13 +13,6 @@ class Email:
     value: str
 
     def __post_init__(self) -> None:
-        if not isinstance(self.value, str):
-            raise ValueObjectValidationError(
-                target_name="Email",
-                field="value",
-                value=self.value,
-                reason=f"Expected str, got {type(self.value).__name__}",
-            )
 
         if not verify_email_syntax(self.value):
             raise ValueObjectValidationError(

@@ -1,7 +1,7 @@
 from typing import Any
 
 
-class EntityBaseError(Exception):
+class ProjectBaseError(Exception):
     def __init__(self, message: str, code: str, context: dict[str, Any] | None):
 
         super().__init__(message)
@@ -10,12 +10,12 @@ class EntityBaseError(Exception):
         self.context: dict[str, Any] | None = context or {}
 
 
-class DomainValidationError(EntityBaseError):
+class DomainValidationError(ProjectBaseError):
     def __init__(
         self, target_name: str, field: str, value: Any, reason: str | None = None
     ):
         super().__init__(
-            message=f"Validation failed for {target_name}.{field}: {reason or 'no additional details'}",
+            message=f"Validation failed for {target_name}.{field}.",
             code=f"{target_name.upper()}_VALIDATION_ERROR",
             context={
                 "target": target_name,

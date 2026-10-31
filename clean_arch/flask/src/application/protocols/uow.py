@@ -1,15 +1,18 @@
-from typing import Protocol, Any
+from typing import Protocol
+from types import TracebackType
+from src.application.protocols.user_repo import UserRepo
 
-from src.application.protocols.user_repo import UserRepoProtocole
 
 class UnitOfWorkProtocol(Protocol):
-    user: UserRepoProtocole
+    user: UserRepo
 
     def __enter__(self) -> "UnitOfWorkProtocol": ...
-    def __exit__(self, exc_type: Any, exc: Any, tb: Any) -> None: ...
+    def __exit__(
+        self,
+        exc_type: type[BaseException] | None,
+        exc_val: BaseException | None,
+        tb: TracebackType | None,
+    ) -> None: ...
 
-    def commit(self) -> None: ...
+    def commit(self) -> None: ... # لو معملتش كوممت فانه عند الخروج من السياق هيعمل روول باك تلقائيا
     def rollback(self) -> None: ...
-
-        
-
