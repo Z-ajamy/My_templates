@@ -37,4 +37,3 @@ class User(BaseEntity):
     def change_email(self, new_email: Email) -> User:
         obj = replace(self, email=new_email, version=self.version + 1)
         return obj
-

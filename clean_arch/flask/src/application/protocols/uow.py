@@ -1,5 +1,6 @@
-from typing import Protocol
 from types import TracebackType
+from typing import Protocol
+
 from src.application.protocols.user_repo import UserRepo
 
 
@@ -14,5 +15,7 @@ class UnitOfWorkProtocol(Protocol):
         tb: TracebackType | None,
     ) -> None: ...
 
-    def commit(self) -> None: ... # لو معملتش كوممت فانه عند الخروج من السياق هيعمل روول باك تلقائيا
+    def commit(
+        self,
+    ) -> None: ...  # لو معملتش كوممت فانه عند الخروج من السياق هيعمل روول باك تلقائيا
     def rollback(self) -> None: ...

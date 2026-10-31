@@ -3,7 +3,6 @@ from dataclasses import dataclass
 from src.domain.exception.value_obj_validation_exception import (
     ValueObjectValidationError,
 )
-
 from src.domain.shared.email_validator import verify_email_syntax
 
 

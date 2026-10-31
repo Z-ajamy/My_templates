@@ -1,9 +1,9 @@
-from email_validator import validate_email, EmailNotValidError
+from email_validator import EmailNotValidError, validate_email
 
 
 def verify_email_syntax(email: str) -> bool:
     try:
         valid = validate_email(email)
         return True
-    except EmailNotValidError as e:
+    except EmailNotValidError:
         return False
