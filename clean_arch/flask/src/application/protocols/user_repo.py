@@ -6,7 +6,7 @@ from src.domain.shared.value_objs import Email
 
 class UserRepo(Protocol):
     # Commands --Does change the data--
-    def save(self, user: User) -> None: ...
+    def save(self, user: User) -> None: ...  # save and update the object
     def remove(self, user: User) -> None: ...
 
     # التخزين في نمط المستودع يجب ان يحاكي التخزين في الرام "تجريد مطلق"
