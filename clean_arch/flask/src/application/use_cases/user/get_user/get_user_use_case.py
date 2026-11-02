@@ -19,6 +19,6 @@ class GetUserUseCase:
                     id=request.id,
                     reason="User not found for get data",
                 )
-            res = GetUserResponseDTO(id=user.id, email=user.email.value)
+            res = GetUserResponseDTO(id=user.id, email=user.email.value, name=user.name)
 
             return res

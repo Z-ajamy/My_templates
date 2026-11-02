@@ -7,7 +7,7 @@ class ProjectBaseError(Exception):
         super().__init__(message)
         self.message: str = message
         self.code: str = code
-        self.context: dict[str, Any] | None = context or {}
+        self.context: dict[str, Any] = context or {}
 
 
 class DomainValidationError(ProjectBaseError):

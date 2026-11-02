@@ -10,3 +10,4 @@ class GetUserRequestDTO:
 class GetUserResponseDTO:
     id: str
     email: str
+    name: str

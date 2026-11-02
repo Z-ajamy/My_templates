@@ -8,7 +8,8 @@ from src.domain.exception.entities_validation_exception import EntityValidationE
 from src.domain.shared.value_objs import Email
 
 
-@dataclass(slots=True, frozen=True, kw_only=True)
+# لو شلت eq=False فان الداتاكلاس هيعمل افررايت لل eq بتاع ال Base
+@dataclass(slots=True, frozen=True, kw_only=True, eq=False)
 class User(BaseEntity):
     name: str
     email: Email
@@ -23,6 +24,10 @@ class User(BaseEntity):
         if not self.name.strip():
             raise EntityValidationError(
                 "User", "name", self.name, "Name cannot be empty"
+            )
+        if len(self.name) > 50:
+            raise EntityValidationError(
+                "User", "name", self.name, "Name must be <50 char"
             )
 
         if self.version < 0:

@@ -9,7 +9,9 @@ class UserORM(Base):
 
     id: Mapped[str] = mapped_column(String(32), primary_key=True)
     name: Mapped[str] = mapped_column(String(50))
-    email: Mapped[str] = mapped_column(String(255))  # if nullable Mapped[str|None]
+    email: Mapped[str] = mapped_column(
+        String(255), unique=True, index=True
+    )  # if nullable Mapped[str|None]
     version_id: Mapped[int]
 
     # رسل أوامر مباشرة لمحرك SQLAlchemy

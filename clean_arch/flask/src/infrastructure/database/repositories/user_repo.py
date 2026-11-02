@@ -26,6 +26,9 @@ class UserRepo:
         if with_for_update:
             stmt = stmt.with_for_update()
         orm_user = self.session.execute(stmt).scalar_one_or_none()
+        if not orm_user:
+            return None
+
         domain_user = UserMapper.to_domain(orm_user)
         return domain_user
 
@@ -34,5 +37,12 @@ class UserRepo:
         if with_for_update:
             stmt = stmt.with_for_update()
         orm_user = self.session.execute(stmt).scalar_one_or_none()
+        if not orm_user:
+            return None
+
         domain_user = UserMapper.to_domain(orm_user)
         return domain_user
+
+
+# هااااااااااااام
+# execute هي تجاهل تام لكل قواعد ال sqlalchemy  هي تطلق الجمل مباشرة ولا تكترث للقواعد النظامية مثل mapper_args

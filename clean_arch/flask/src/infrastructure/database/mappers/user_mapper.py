@@ -5,9 +5,7 @@ from src.infrastructure.database.sqlalchemy_models.user import UserORM
 
 class UserMapper:
     @staticmethod
-    def to_orm(duser: User | None) -> UserORM | None:
-        if not duser:
-            return None
+    def to_orm(duser: User) -> UserORM:
         orm_obj = UserORM(
             id=duser.id,
             name=duser.name,
@@ -17,9 +15,7 @@ class UserMapper:
         return orm_obj
 
     @staticmethod
-    def to_domain(ouser: UserORM | None) -> User | None:
-        if not ouser:
-            return None
+    def to_domain(ouser: UserORM) -> User:
         email = Email(value=ouser.email)
 
         domain_user = User(
