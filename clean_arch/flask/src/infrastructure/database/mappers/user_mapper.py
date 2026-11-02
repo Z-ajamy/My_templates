@@ -10,7 +10,6 @@ class UserMapper:
             id=duser.id,
             name=duser.name,
             email=duser.email.value,
-            version_id=duser.version,
         )
         return orm_obj
 
@@ -18,7 +17,5 @@ class UserMapper:
     def to_domain(ouser: UserORM) -> User:
         email = Email(value=ouser.email)
 
-        domain_user = User(
-            id=ouser.id, name=ouser.name, email=email, version=ouser.version_id
-        )
+        domain_user = User(id=ouser.id, name=ouser.name, email=email)
         return domain_user

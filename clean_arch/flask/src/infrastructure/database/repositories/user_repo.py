@@ -12,10 +12,15 @@ class UserRepo:
         self.session = session
 
     def save(self, user: User) -> None:  # save and update the object
-        orm_user = UserMapper.to_orm(user)
-        self.session.merge(
-            orm_user
-        )  # if the obj in session it update it, if the obj in DB it select to RAM and update it, if not exists it add to the session
+        stmt = select(UserORM).where(UserORM.id == user.id)
+        orm_user = self.session.execute(stmt).scalar_one_or_none()
+
+        if orm_user:
+            orm_user.name = user.name
+            orm_user.email = user.email.value
+        else:
+            new_orm_user = UserMapper.to_orm(user)
+            self.session.add(new_orm_user)
 
     def remove(self, user: User) -> None:
         stmt = delete(UserORM).where(UserORM.id == user.id)

@@ -1,6 +1,6 @@
 from __future__ import annotations
 
-from dataclasses import dataclass, field, replace
+from dataclasses import dataclass, replace
 
 # you can replace it with pydantic
 from src.domain.entities.base import BaseEntity
@@ -13,10 +13,6 @@ from src.domain.shared.value_objs import Email
 class User(BaseEntity):
     name: str
     email: Email
-    version: int = field(
-        default=0,
-        metadata={"description": "optimistic locking version for concurrency control"},
-    )
 
     def __post_init__(self) -> None:
 
@@ -30,15 +26,10 @@ class User(BaseEntity):
                 "User", "name", self.name, "Name must be <50 char"
             )
 
-        if self.version < 0:
-            raise EntityValidationError(
-                "User", "version", self.version, "Version cannot be negative"
-            )
-
     def change_name(self, new_name: str) -> User:
-        obj = replace(self, name=new_name, version=self.version + 1)
+        obj = replace(self, name=new_name)
         return obj
 
     def change_email(self, new_email: Email) -> User:
-        obj = replace(self, email=new_email, version=self.version + 1)
+        obj = replace(self, email=new_email)
         return obj

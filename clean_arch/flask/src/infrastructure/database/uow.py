@@ -1,9 +1,11 @@
 from types import TracebackType
+from typing import Self
 
 from sqlalchemy.exc import IntegrityError
 from sqlalchemy.orm import Session, sessionmaker
 from sqlalchemy.orm.exc import StaleDataError
 
+from src.application.protocols.user_repo import UserRepo as UserRepoProtocol
 from src.application.use_cases.exceptions import (
     ConcurrentModificationError,
     ResourceConflictError,
@@ -12,11 +14,13 @@ from src.infrastructure.database.repositories.user_repo import UserRepo
 
 
 class SqlAlchemyUnitOfWork:
+    user: UserRepoProtocol
+
     def __init__(self, session_maker: sessionmaker[Session]) -> None:
         self._sessmkr = session_maker
         self.session: Session
 
-    def __enter__(self) -> "SqlAlchemyUnitOfWork":
+    def __enter__(self) -> Self:
         self.session = self._sessmkr()
         self.user = UserRepo(session=self.session)
         return self

@@ -19,5 +19,4 @@ class UserORM(Base):
 
     __mapper_args__ = {
         "version_id_col": version_id,  # it's add AND version_id = {number} to Where automiticlly
-        "version_id_generator": False,  # do not increases =+1 in the update automiticlly
     }

@@ -11,7 +11,6 @@ class UpdateEmailRequestSchema(BaseModel):
     new_email: EmailStr
 
 
-
 class UpdateEmailResponseSchema(BaseModel):
     id: str
     new_email: EmailStr

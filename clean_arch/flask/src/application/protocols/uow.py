@@ -1,5 +1,5 @@
 from types import TracebackType
-from typing import Protocol
+from typing import Protocol, Self
 
 from src.application.protocols.user_repo import UserRepo
 
@@ -7,7 +7,7 @@ from src.application.protocols.user_repo import UserRepo
 class UnitOfWorkProtocol(Protocol):
     user: UserRepo
 
-    def __enter__(self) -> "UnitOfWorkProtocol": ...
+    def __enter__(self) -> Self: ...
     def __exit__(
         self,
         exc_type: type[BaseException] | None,
