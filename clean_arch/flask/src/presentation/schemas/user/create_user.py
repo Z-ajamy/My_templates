@@ -12,7 +12,7 @@ class CreateUserRequestSchema(BaseModel):
     email: EmailStr
 
 
-class UserResponseSchema(BaseModel):
+class CreateUserResponseSchema(BaseModel):
     id: str
     email: EmailStr
     name: str

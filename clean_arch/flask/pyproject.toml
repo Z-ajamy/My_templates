@@ -9,10 +9,13 @@ authors = [
 requires-python = ">=3.14"
 dependencies = [
     "email-validator>=2.3.0",
+    "flask>=3.1.3",
     "mysqlclient>=2.3.0",
     "pydantic>=2.14.2",
+    "pydantic-settings>=2.16.2",
     "sqlalchemy>=2.1.6",
 ]
+
 
 [project.scripts]
 flask = "flask:main"

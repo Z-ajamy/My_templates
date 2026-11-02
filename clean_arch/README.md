@@ -150,7 +150,3 @@ project_root/
 ├── .venv                            
 ├── uv.lock                            
 └── .gitignore                           
-
-
-
-

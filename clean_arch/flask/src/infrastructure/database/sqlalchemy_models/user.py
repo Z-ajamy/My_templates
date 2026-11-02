@@ -12,7 +12,7 @@ class UserORM(Base):
     email: Mapped[str] = mapped_column(
         String(255), unique=True, index=True
     )  # if nullable Mapped[str|None]
-    version_id: Mapped[int]
+    version_id: Mapped[int] = mapped_column(default=0)
 
     # رسل أوامر مباشرة لمحرك SQLAlchemy
     #  الداخلي الذي يدير دورة حياة الكائن وسلوك الاستعلامات.
