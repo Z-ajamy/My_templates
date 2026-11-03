@@ -37,7 +37,35 @@ user_bp = Blueprint("user", __name__, url_prefix="/users")
 
 class UserAPI(MethodView):
     def get(self, user_id: str) -> tuple[Response, int]:
-
+        """
+        Get User by ID
+        ---
+        tags:
+          - Users
+        parameters:
+          - in: path
+            name: user_id
+            type: string
+            required: true
+            description: The unique identifier of the user.
+        responses:
+          200:
+            description: User retrieved successfully.
+            schema:
+              type: object
+              properties:
+                id:
+                  type: string
+                  example: "123e4567-e89b-12d3-a456-426614174000"
+                email:
+                  type: string
+                  example: "engineer@domain.com"
+                name:
+                  type: string
+                  example: "John Doe"
+          404:
+            description: Resource Not Found.
+        """
         dto = GetUserRequestDTO(id=user_id)
         uow = SqlAlchemyUnitOfWork(session_maker=current_app.config["SESS_MKR"])
         use_case = GetUserUseCase(uow=uow)
@@ -48,6 +76,48 @@ class UserAPI(MethodView):
         return jsonify(response.model_dump()), 200
 
     def post(self) -> tuple[Response, int]:
+        """
+        Create a new User
+        ---
+        tags:
+          - Users
+        parameters:
+          - in: body
+            name: body
+            required: true
+            description: User creation payload.
+            schema:
+              type: object
+              required:
+                - name
+                - email
+              properties:
+                name:
+                  type: string
+                  minLength: 5
+                  maxLength: 50
+                  example: "Software Engineer"
+                email:
+                  type: string
+                  format: email
+                  example: "new.user@domain.com"
+        responses:
+          201:
+            description: User created successfully.
+            schema:
+              type: object
+              properties:
+                id:
+                  type: string
+                name:
+                  type: string
+                email:
+                  type: string
+          409:
+            description: Resource Conflict (e.g., Email already exists).
+          422:
+            description: Validation Error (Pydantic payload rejection).
+        """
         schema = CreateUserRequestSchema.model_validate(request.get_json())
 
         dto = CreateUserRequestDTO(name=schema.name, email=schema.email)
@@ -61,6 +131,46 @@ class UserAPI(MethodView):
         return jsonify(response.model_dump()), 201
 
     def patch(self, user_id: str) -> tuple[Response, int]:
+        """
+        Update User Email
+        ---
+        tags:
+          - Users
+        parameters:
+          - in: path
+            name: user_id
+            type: string
+            required: true
+            description: The unique identifier of the user.
+          - in: body
+            name: body
+            required: true
+            schema:
+              type: object
+              required:
+                - new_email
+              properties:
+                new_email:
+                  type: string
+                  format: email
+                  example: "updated.email@domain.com"
+        responses:
+          200:
+            description: Email updated successfully.
+            schema:
+              type: object
+              properties:
+                id:
+                  type: string
+                new_email:
+                  type: string
+          404:
+            description: User not found.
+          409:
+            description: Resource Conflict (Email taken).
+          422:
+            description: Validation Error.
+        """
         schema = UpdateEmailRequestSchema.model_validate(request.get_json())
 
         dto = UpdateEmailRequestDTO(id=user_id, new_email=schema.new_email)
