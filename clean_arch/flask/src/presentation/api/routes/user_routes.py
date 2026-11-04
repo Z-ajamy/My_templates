@@ -67,8 +67,7 @@ class UserAPI(MethodView):
             description: Resource Not Found.
         """
         dto = GetUserRequestDTO(id=user_id)
-        uow = SqlAlchemyUnitOfWork(session_maker=current_app.config["SESS_MKR"])
-        use_case = GetUserUseCase(uow=uow)
+        use_case = current_app.container.get_user_use_case()
         res: GetUserResponseDTO = use_case.execute(request=dto)
 
         response = GetUserResponseSchema(id=res.id, email=res.email, name=res.name)
@@ -121,8 +120,7 @@ class UserAPI(MethodView):
         schema = CreateUserRequestSchema.model_validate(request.get_json())
 
         dto = CreateUserRequestDTO(name=schema.name, email=schema.email)
-        uow = SqlAlchemyUnitOfWork(session_maker=current_app.config["SESS_MKR"])
-        use_case = CreateUserUseCase(uow=uow)
+        use_case = current_app.container.create_user_use_case()
         res: CreateUserResponseDTO = use_case.execute(request=dto)
 
         response = CreateUserResponseSchema(id=res.id, name=res.name, email=res.email)
@@ -174,9 +172,7 @@ class UserAPI(MethodView):
         schema = UpdateEmailRequestSchema.model_validate(request.get_json())
 
         dto = UpdateEmailRequestDTO(id=user_id, new_email=schema.new_email)
-        uow = SqlAlchemyUnitOfWork(session_maker=current_app.config["SESS_MKR"])
-        use_case = UpdateEmailUseCase(uow=uow)
-
+        use_case = current_app.container.update_email_use_case()
         res: UpdateEmailResponseDTO = use_case.execute(dto)
 
         response = UpdateEmailResponseSchema(id=res.id, new_email=res.new_email)
