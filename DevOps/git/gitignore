@@ -34,3 +34,8 @@ yarn-error.log
 .ruff_cache/
 .pytest_cache/
 .mypy_cache/
+
+#gRPC
+*_pb2.py
+*_pb2.pyi
+*_pb2_grpc.py

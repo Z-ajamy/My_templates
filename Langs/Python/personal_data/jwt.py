@@ -36,7 +36,7 @@ class JWTAuthenticator:
             decoded_payload = jwt.decode(
                 jwt=token,
                 key=self.secret_key,
-                algorithms=[self.algorithm],
+                algorithms=[self.algorithm], #هام لسد ثغرة ارسال none  يجب ان تكون list[str] not str
                 issuer=self.issuer,
                 options={"require": ["exp", "iss", "sub"]} 
             )

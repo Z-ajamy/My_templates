@@ -1,0 +1,114 @@
+// تحديد إصدار الصياغة (يجب أن يكون في السطر الأول غير الفارغ)
+syntax = "proto3";
+
+// مساحة الاسم (Namespace) لمنع تصادم أسماء الرسائل عند استيراد ملفات متعددة
+package taskmanager.v1;
+
+// استيراد الأنواع القياسية من مكتبة Google (Well-Known Types)
+// Empty: لتمثيل الدوال التي لا تستقبل أو لا تُرجع بيانات (بديل void)
+import "google/protobuf/empty.proto";
+// Timestamp: لتمثيل التوقيت بدقة النانو ثانية بشكل موحد عبر اللغات
+import "google/protobuf/timestamp.proto";
+
+// =========================================================================
+// تعريف الخدمة (الواجهة التي تحدد الدوال المتاحة عن بُعد)
+// =========================================================================
+service TaskManager {
+
+  // 1. دالة لا تستقبل بيانات ولا تُرجع بيانات (فحص جاهزية الخدمة)
+  rpc Ping (google.protobuf.Empty) returns (google.protobuf.Empty);
+
+  // 2. دالة تستقبل بيانات ولا تُرجع قيمة (حذف مهمة؛ نجاح الاستدعاء يعني إتمام الحذف)
+  rpc DeleteTask (TaskIdRequest) returns (google.protobuf.Empty);
+
+  // 3. دالة أحادية (Unary): طلب واحد يقابله رد واحد (إنشاء مهمة وإرجاعها)
+  rpc CreateTask (CreateTaskRequest) returns (Task);
+
+  // 4. دفق من الخادم (Server Streaming): طلب واحد يفتح قناة لإرسال تتابع من المهام
+  rpc StreamTasks (StreamTasksRequest) returns (stream Task);
+
+  // 5. دفق من العميل (Client Streaming): العميل يرسل تتابعاً من المهام، والخادم يرد بملخص واحد
+  rpc BulkUploadTasks (stream CreateTaskRequest) returns (BulkUploadSummary);
+
+  // 6. دفق مزدوج (Bidirectional Streaming): تواصل مستمر ومستقل في الاتجاهين معاً
+  rpc SyncTasks (stream SyncEvent) returns (stream SyncAck);
+}
+
+// =========================================================================
+// تعريف الثوابت (Enums)
+// =========================================================================
+enum Priority {
+  // القيمة 0 إلزامية في proto3 وتُستخدم كقيمة افتراضية عند عدم تعيين الحقل
+  PRIORITY_UNSPECIFIED = 0;
+  PRIORITY_LOW = 1;
+  PRIORITY_MEDIUM = 2;
+  PRIORITY_HIGH = 3;
+}
+
+// =========================================================================
+// تعريف الرسائل (هياكل البيانات)
+// =========================================================================
+message TaskIdRequest {
+  string id = 1; // الرقم 1 هو معرّف الحقل الثنائي (Field Tag) وليس قيمة افتراضية
+}
+
+message CreateTaskRequest {
+  // حجز أرقام أو أسماء حقول حُذفت سابقاً لمنع إعادة استخدامها وكسر التوافقية الرجعية
+  reserved 9, 10;
+  reserved "legacy_flag";
+
+  string title = 1;
+  Priority priority = 2;
+
+  // الحقل optional يفعّل خاصية التتبع الصريح (Explicit Presence)
+  // مما يسمح للخادم بالتمييز بين "لم يُرسل الحقل" وبين "أُرسل كسلسلة نصية فارغة"
+  optional string notes = 3;
+
+  // قائمة مرتبة (تُترجم إلى list في بايثون)
+  repeated string tags = 4;
+
+  // جدول ترابطي (يُترجم إلى dict في بايثون؛ المفتاح يجب أن يكون نوعاً عددياً أو نصياً)
+  map<string, string> labels = 5;
+
+  // حقل oneof: يضمن وجود قيمة واحدة فقط من الخيارات التالية في نفس اللحظة (يوفر الذاكرة)
+  oneof source {
+    string url_source = 6;
+    bytes raw_payload = 7; // بيانات ثنائية خام
+  }
+}
+
+message Task {
+  string id = 1;
+  string title = 2;
+  Priority priority = 3;
+  optional string notes = 4;
+  repeated string tags = 5;
+  map<string, string> labels = 6;
+  google.protobuf.Timestamp created_at = 7;
+
+  oneof source {
+    string url_source = 8;
+    bytes raw_payload = 9;
+  }
+}
+
+message StreamTasksRequest {
+  // تصفية اختيارية؛ إذا كانت 0 (PRIORITY_UNSPECIFIED) يتم بث جميع المهام
+  Priority min_priority = 1;
+}
+
+message BulkUploadSummary {
+  int32 created_count = 1;
+  repeated string created_ids = 2;
+}
+
+message SyncEvent {
+  string task_id = 1;
+  string action = 2; // مثل: "CHECK", "ARCHIVE"
+}
+
+message SyncAck {
+  string task_id = 1;
+  bool accepted = 2;
+  string detail = 3;
+}
