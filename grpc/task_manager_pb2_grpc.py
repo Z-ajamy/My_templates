@@ -2,7 +2,7 @@
 """Client and server classes corresponding to protobuf-defined services."""
 import grpc
 import warnings
-
+ 
 from google.protobuf import empty_pb2 as google_dot_protobuf_dot_empty__pb2
 import task_manager_pb2 as task__manager__pb2
 
