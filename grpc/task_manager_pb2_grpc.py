@@ -25,7 +25,7 @@ if _version_not_supported:
         + f' or downgrade your generated code using grpcio-tools<={GRPC_VERSION}.'
     )
 
-
+ 
 class TaskManagerStub:
     """=========================================================================
     تعريف الخدمة (الواجهة التي تحدد الدوال المتاحة عن بُعد)
