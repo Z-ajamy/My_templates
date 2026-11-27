@@ -7,7 +7,7 @@ package taskmanager.v1;
 // استيراد الأنواع القياسية من مكتبة Google (Well-Known Types)
 // Empty: لتمثيل الدوال التي لا تستقبل أو لا تُرجع بيانات (بديل void)
 import "google/protobuf/empty.proto";
-// Timestamp: لتمثيل التوقيت بدقة النانو ثانية بشكل موحد عبر اللغات
+// Timestamp: لتمثيل التوقيت بدقة النانو ثانية بشكل موحد عبر اللغات ب UTC
 import "google/protobuf/timestamp.proto";
 
 // =========================================================================
